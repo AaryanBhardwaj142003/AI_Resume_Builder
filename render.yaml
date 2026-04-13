@@ -1,0 +1,27 @@
+# render.yaml - Resume Optimizer Backend
+# Deploy to Render.com
+
+services:
+  - type: web
+    name: resume-optimizer
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    regions:
+      - oregon
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        value: http://localhost:5173
