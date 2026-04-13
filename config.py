@@ -25,8 +25,8 @@ def get_required_env(key, display_name=None):
     return value
 
 # ─── AI API Keys ───
-GROQ_API_KEY = get_required_env("GROQ_API_KEY", "GROQ_API_KEY")
-GROQ_MODEL = "llama-3.1-8b-instant"
+# GROQ_API_KEY = get_required_env("GROQ_API_KEY", "GROQ_API_KEY")
+# GROQ_MODEL = "llama-3.1-8b-instant"
 
 OPENAI_API_KEY = get_required_env("OPENAI_API_KEY", "OPENAI_API_KEY")
 OLLAMA_MODEL = "gemma4:31b-cloud"

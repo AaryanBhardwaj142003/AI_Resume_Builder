@@ -181,26 +181,18 @@ def optimize_resume(current_user_id):
         return jsonify({"error": "LLM failed to generate an optimized resume"}), 500
 
 
-@app.get("/resume")
-@token_required
-def get_saved_resume(current_user_id):
-    """Fetch the user's saved original resume."""
-    original_resume = db.get_original_resume(current_user_id)
-    return jsonify({"resume": original_resume}), 200
-
-
 @app.get("/history")
 @token_required
 def get_optimization_history(current_user_id):
     """Fetch all optimized versions for a user's resume."""
     # We moved this query logic to database.py for better abstraction!
     user_doc = db.get_optimization_history(current_user_id)
-
+    
     if not user_doc:
         return jsonify({"error": "No history found for this user."}), 404
 
     return jsonify({
-        "email": user_doc.get("email"),
+        "email": user_doc.get("email"), 
         "history": user_doc.get("tailored_versions", [])
     }), 200
 
