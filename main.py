@@ -13,8 +13,13 @@ from schema import JD_FORMAT
 
 app = Flask(__name__)
 # Enable CORS for all routes (important for React frontend to talk to Flask)
+# Include both localhost (for dev) and the deployed frontend URL
+_cors_origins = ["http://localhost:5173"]
+if FRONTEND_URL and FRONTEND_URL not in _cors_origins:
+    _cors_origins.append(FRONTEND_URL)
+
 CORS(app, resources={r"/*": {
-    "origins": ["http://localhost:5173"],
+    "origins": _cors_origins,
     "methods": ["GET", "POST", "OPTIONS"],
     "allow_headers": ["Content-Type", "Authorization"]
 }})
@@ -179,6 +184,18 @@ def optimize_resume(current_user_id):
     else:
         print("Failed to optimize resume.")
         return jsonify({"error": "LLM failed to generate an optimized resume"}), 500
+
+
+@app.get("/resume")
+@token_required
+def get_resume(current_user_id):
+    """Fetch the user's saved original resume to pre-fill the form."""
+    original_resume = db.get_original_resume(current_user_id)
+
+    if not original_resume:
+        return jsonify({"resume": {}}), 200  # Return empty, not 404, so form stays blank
+
+    return jsonify({"resume": original_resume}), 200
 
 
 @app.get("/history")
